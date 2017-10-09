@@ -10,6 +10,7 @@ import com.wzj.hengmei.entity.UserInfo;
 import com.wzj.hengmei.entity.UserInfoExample;
 import com.wzj.hengmei.mapper.UserInfoMapper;
 import com.wzj.hengmei.model.UserInfoModel;
+import com.wzj.hengmei.utils.BaseService;
 import com.wzj.hengmei.utils.MD5Maker;
 
 /**
@@ -18,7 +19,7 @@ import com.wzj.hengmei.utils.MD5Maker;
  *
  */
 @Service("userInfoService")
-public class UserInfoService {
+public class UserInfoService extends BaseService{
 	@Resource
 	UserInfoMapper userInfoMapper;
 
@@ -61,9 +62,5 @@ public class UserInfoService {
 			}
 		}
 		return false;
-	}
-
-	public boolean isEmpty(String str) {
-		return str == null && "".equals(str) ? true: false;
 	}
 }
