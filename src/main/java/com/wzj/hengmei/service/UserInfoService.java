@@ -8,13 +8,12 @@ import org.springframework.stereotype.Service;
 
 import com.wzj.hengmei.entity.UserInfo;
 import com.wzj.hengmei.entity.UserInfoExample;
-import com.wzj.hengmei.entity.UserInfoExample.Criteria;
 import com.wzj.hengmei.mapper.UserInfoMapper;
 import com.wzj.hengmei.model.UserInfoModel;
 import com.wzj.hengmei.utils.MD5Maker;
 
 /**
- * 
+ *
  * @author nxwzj
  *
  */
@@ -22,7 +21,7 @@ import com.wzj.hengmei.utils.MD5Maker;
 public class UserInfoService {
 	@Resource
 	UserInfoMapper userInfoMapper;
-	
+
 	/**
 	 * 验证用户名密码
 	 * @param model
@@ -45,7 +44,7 @@ public class UserInfoService {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 查询用户名是否存在
 	 * @param model
@@ -63,7 +62,7 @@ public class UserInfoService {
 		}
 		return false;
 	}
-	
+
 	public boolean isEmpty(String str) {
 		return str == null && "".equals(str) ? true: false;
 	}

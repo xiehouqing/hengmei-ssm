@@ -33,7 +33,7 @@ public class UserInfoController {
 
 	@RequestMapping("/login")
 	@ResponseBody
-	public ResultViewModel login(UserInfoModel model)throws Exception{
+	public ResultViewModel login(UserInfoModel model) throws Exception{
 		ResultViewModel resultModel = new ResultViewModel();
 		if (model !=null) {
 			if (userInfoService.checkUser(model)) {

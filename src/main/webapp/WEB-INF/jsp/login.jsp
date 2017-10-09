@@ -10,7 +10,7 @@
 <title>Login</title>
 </head>
 <body>
-	<form:form action="login" method="post" modelAttribute="userModel" role="form" id="userForm">
+	<form:form action="login" method="post" modelAttribute="model" role="form" id="userForm">
 		<label for="userName">userName : </label>
 		<form:input path="userName" label="userName"/>
 		<br>
