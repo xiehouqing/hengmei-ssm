@@ -21,7 +21,7 @@ public class UserInfoController {
 
 	@Resource
 	UserInfoService userInfoService;
-	
+
 	@RequestMapping("/init")
 	public ModelAndView init(){
 		ModelAndView mv = new ModelAndView();
@@ -30,14 +30,13 @@ public class UserInfoController {
 		mv.setViewName("login");
 		return mv;
 	}
-	
+
 	@RequestMapping("/login")
 	@ResponseBody
 	public ResultViewModel login(UserInfoModel model)throws Exception{
 		ResultViewModel resultModel = new ResultViewModel();
 		if (model !=null) {
 			if (userInfoService.checkUser(model)) {
-				resultModel.setResult(true);
 				resultModel.setResultData(model);
 			}else {
 				resultModel.setErrorMsg("用户名或密码有误");
