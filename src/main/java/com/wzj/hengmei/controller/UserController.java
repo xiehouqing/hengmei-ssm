@@ -3,8 +3,15 @@
  */
 package com.wzj.hengmei.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URLEncoder;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,5 +57,45 @@ public class UserController extends BaseController{
 		ModelAndView mv = new ModelAndView();
 		System.out.println(userModel);
 		return userModel.toString();
+	}
+
+	/**
+	 * ファイルダウンロード処理
+	 * @param filePath
+	 * @param newFileName
+	 * @return
+	 */
+	public void fileDownload(String filePath, String newFileName,HttpServletResponse response) {
+		BufferedInputStream bis = null;
+		BufferedOutputStream bos = null;
+		try {
+			File file = new File(filePath + newFileName);
+			if (file.exists()) {
+				response.reset();
+				response.setContentType("application/octet-stream;charset=UTF-8");
+				response.setHeader("Content-disposition", "attachment; filename=" + URLEncoder.encode(newFileName, "UTF-8"));
+				response.setHeader("Content-Length", String.valueOf(file.length()));
+				bis = new BufferedInputStream(new FileInputStream(file));
+				bos = new BufferedOutputStream(response.getOutputStream());
+				bos.write(new   byte []{( byte ) 0xEF ,( byte ) 0xBB ,( byte ) 0xBF });//BOM
+				byte[] buff = new byte[2048];
+				int bytesRead;
+				while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+					bos.write(buff, 0, bytesRead);
+				}
+				bos.flush();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				bis.close();
+			} catch (Exception ex) {
+			}
+			try {
+				bos.close();
+			} catch (Exception ex) {
+			}
+		}
 	}
 }
