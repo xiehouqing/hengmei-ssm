@@ -10,21 +10,40 @@
 
 	<build>
 		<finalName>hengmei</finalName>
+		<defaultGoal>compile</defaultGoal>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<properties>
+		<!-- Web Tomcat7 -->
+		<jsp.version>2.2</jsp.version>
+		<jstl.version>1.2</jstl.version>
+		<servlet.version>3.0.1</servlet.version>
 		<!-- 文件拷贝时的编码 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<!-- 编译时的编码 -->
 		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 		<!-- spring版本号 -->
-		<spring.version>4.0.2.RELEASE</spring.version>
+		<spring.version>4.2.2.RELEASE</spring.version>
+		<jackson.version>2.8.5</jackson.version>
 		<!-- mybatis版本号 -->
 		<mybatis.version>3.4.5</mybatis.version>
 		<!-- log4j日志文件管理包版本 -->
-		<slf4j.version>1.7.7</slf4j.version>
+		<slf4j.version>1.7.25</slf4j.version>
 		<log4j.version>1.2.17</log4j.version>
+		<log4j2.version>2.1</log4j2.version>
 	</properties>
 
 	<dependencies>
@@ -129,12 +148,28 @@
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.2.2</version>
 		</dependency>
-		<!-- JSTL标签类 -->
+		<!-- Web dependencies start -->
 		<dependency>
-			<groupId>jstl</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>${jsp.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+		<!-- Web dependencies end -->
 		<!-- 日志文件管理包 -->
 		<!-- log start -->
 		<dependency>
@@ -143,14 +178,32 @@
 			<version>${log4j.version}</version>
 		</dependency>
 
-
-		<!-- 格式化对象，方便输出日志 -->
 		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.1.41</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-web</artifactId>
+			<version>${log4j2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j2.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.bgee.log4jdbc-log4j2</groupId>
+    		<artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+    		<version>1.16</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -158,15 +211,11 @@
 			<version>${slf4j.version}</version>
 		</dependency>
 
+		<!-- 格式化对象，方便输出日志 -->
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bgee.log4jdbc-log4j2</groupId>
-    		<artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
-    		<version>1.16</version>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.1.41</version>
 		</dependency>
 		<!-- log end -->
 		<!-- 映入JSON -->
@@ -174,6 +223,21 @@
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
+		    <version>${jackson.version}</version>
 		</dependency>
 		<!-- 上传组件包 -->
 		<dependency>

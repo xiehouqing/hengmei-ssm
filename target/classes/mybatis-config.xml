@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <settings>
-        <setting name="mapUnderscoreToCamelCase" value="true"/>
-		<setting name="logImpl" value="SLF4J" />
+        <setting name="mapUnderscoreToCamelCase" value="true"/><!-- 驼峰命名 -->
+		<setting name="logImpl" value="LOG4J" /><!-- SLF4J / LOG4J -->
     </settings>
 </configuration>

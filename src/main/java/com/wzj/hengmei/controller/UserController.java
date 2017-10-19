@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wzj.hengmei.model.UserModel;
 import com.wzj.hengmei.service.UserService;
+import com.wzj.hengmei.utils.BaseController;
 
 /**
  * TODO(用一句话描述该文件做什么)
@@ -21,7 +22,8 @@ import com.wzj.hengmei.service.UserService;
  */
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends BaseController{
+
 	@Resource
 	UserService userService;
 

@@ -4,19 +4,35 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0">
 	<display-name>Archetype Created Web Application</display-name>
-	 <!-- 加载log4j配置文件 -->
-    <context-param>
-      <param-name>log4jConfigLocation</param-name>
-      <param-value>classpath:log4j.properties</param-value>
-    </context-param>
-    <listener>
-       <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
-    </listener>
-	<!-- Spring和mybatis的配置文件 -->
+	<welcome-file-list>
+		<welcome-file>/index.jsp</welcome-file>
+	</welcome-file-list>
+	<!-- 加载log4j配置文件 -->
 	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:spring-mybatis.xml</param-value>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>classpath:log4j.properties</param-value>
 	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	<!-- 加载log4j配置文件 end -->
+	<!-- log4jServlet -->
+	<listener>
+		<listener-class>org.apache.logging.log4j.web.Log4jServletContextListener</listener-class>
+	</listener>
+	<filter>
+		<filter-name>log4jServletFilter</filter-name>
+		<filter-class>org.apache.logging.log4j.web.Log4jServletFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>log4jServletFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+		<dispatcher>ERROR</dispatcher>
+	</filter-mapping>
+	<!-- log4jServlet end -->
 	<!-- 编码过滤器 -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
@@ -41,6 +57,15 @@
 	</listener>
 
 	<!-- Spring MVC servlet -->
+	<!-- Spring和mybatis的配置文件 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:applicationContext.xml,
+			classpath:spring-mybatis.xml
+		</param-value>
+	</context-param>
+	<!-- Spring和mybatis的配置文件 end -->
 	<servlet>
 		<servlet-name>SpringMVC</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -56,17 +81,31 @@
 		<!-- 此处可以可以配置成*.do，对应struts的后缀习惯 -->
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-	<welcome-file-list>
-		<welcome-file>/index.jsp</welcome-file>
-	</welcome-file-list>
 
+	<!-- 静态资源访问过滤 -->
 	<servlet-mapping>
-	     <servlet-name>default</servlet-name>
-	     <url-pattern>*.css</url-pattern>
-	     <url-pattern>*.js</url-pattern>
-	     <url-pattern>*.gif</url-pattern>
-	     <url-pattern>*.jpg</url-pattern>
-	     <url-pattern>*.png</url-pattern>
+		<servlet-name>default</servlet-name>
+		<url-pattern>*.css</url-pattern>
+		<url-pattern>*.js</url-pattern>
+		<url-pattern>*.gif</url-pattern>
+		<url-pattern>*.jpg</url-pattern>
+		<url-pattern>*.png</url-pattern>
+		<url-pattern>*.ico</url-pattern>
 	</servlet-mapping>
+	<!-- 静态资源访问过滤 end -->
+
+	<!-- 错误页面 -->
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/jsp/system/error/404.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/jsp/system/error/500.jsp</location>
+	</error-page>
+	<!-- 错误页面 end -->
+	<session-config>
+		<session-timeout>600</session-timeout>
+	</session-config>
 
 </web-app>

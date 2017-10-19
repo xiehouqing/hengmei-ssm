@@ -3,9 +3,9 @@
 <generatorConfiguration>
 	<!-- 用于指定一个需要在配置中解析使用的外部属性文件，引入属性文件后，可以在配置中使用 ${property}这种形式的引用 -->
 	<properties resource="jdbc.properties"/>
+	<classPathEntry location="E:\hengmei-ssm\src\main\resources\lib\mysql-connector-java-5.1.41-bin.jar" />
     <!-- classPathEntry:数据库的JDBC驱动的jar包地址 -->
     <!--
-	<classPathEntry location="E:\hengmei-ssm\src\main\resources\lib\mysql-connector-java-5.1.41-bin.jar" />
 	<classPathEntry location="src/main/resources/lib/mysql-connector-java-5.1.41-bin.jar" />
      -->
 	<!-- 配置文件路径 -->
@@ -55,13 +55,16 @@
             domainObjectName="%"
              -->
         <!--生成对应表及类名 -->
-        <table schema="general" tableName="m_material" domainObjectName="Material">
+        <table schema="general" tableName="t_history_delivery_config" domainObjectName="HistoryDeliveryConfig">
             <!--domain字段的命名规则，false:默认为驼峰命名 true:按数据库真实命名 -->
             <property name="useActualColumnNames" value="false" />
             <!-- 忽略列，不生成bean 字段 -->
             <!-- <ignoreColumn column="FRED" /> -->
             <!-- 指定列的java数据类型 -->
             <!-- <columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" /> -->
+        </table>
+        <table schema="general" tableName="t_delivery_head" domainObjectName="DeliveryHead">
+            <property name="useActualColumnNames" value="false" />
         </table>
     </context>
 
