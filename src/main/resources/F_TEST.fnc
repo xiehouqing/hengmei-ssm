@@ -1,16 +1,16 @@
 CREATE OR REPLACE FUNCTION F_TEST(
-IN_TABLE IN VARCHAR -- Ë°®Âêç
+IN_TABLE IN VARCHAR -- ï\ñº
 ,IN_TAG_NO IN  VARCHAR -- tag_no
 ,IN_SYS_ID IN  VARCHAR -- sys_id
-,IN_DATE IN VARCHAR -- Êó•Êúü
-,IN_HOUR IN VARCHAR -- Â∞è?
-,IN_ADD_DAY IN NUMBER -- Â¢ûÂä†Â§©Êï∞
-,IN_PLUS_MINUS IN NUMBER -- Á¨¶Âè∑ÔºàÁ©∫Êàñ0 : + | 1: -Ôºâ
-,IN_INCREMENT IN NUMBER -- Â¢ûÈáè (Èªò?10Ôºå)
+,IN_DATE IN VARCHAR -- ì˙ä˙
+,IN_HOUR IN VARCHAR -- è¨?
+,IN_ADD_DAY IN NUMBER -- ˙ùâ¡ìVêî
+,IN_PLUS_MINUS IN NUMBER -- ïÑçÜÅiãÛàΩ0 : + | 1: -Åj
+,IN_INCREMENT IN NUMBER -- ˙ùó  (‡“?10ÅC)
 )
 RETURN NUMBER
 IS
---‚ñ† Â§âÊï∞
+--Å° ïœêî
 intErrorInfo  NUMBER;
 CNT  NUMBER;
 MAX_COUNT NUMBER;
@@ -23,20 +23,22 @@ FORMAT_HH_MI VARCHAR2(32);
 FORMAT_FULL VARCHAR2(32);
 PLUS_MINUS NUMBER;
 INCREMENT NUMBER;
-CNT_RECORD NUMBER;-- ??Êï∞Èáè
---‚ñ† Ê∏∏?
+CNT_RECORD NUMBER;-- ??êîó 
+P_VAL NUMBER;
+--Å° ü‡?
 
 
 BEGIN
     DBMS_OUTPUT.ENABLE (buffer_size=>null) ;
-    DBMS_OUTPUT.PUT_LINE('<<<<<<<<<< Ë®àÁÆóÂá¶ÁêÜ START >>>>>>>>>>');
-    --ÂàùÊúüÂåñ
+    DBMS_OUTPUT.PUT_LINE('<<<<<<<<<< åvéZèàóù START >>>>>>>>>>');
+    --èâä˙âª
     intErrorInfo := 0;
     SPACE := ' ';
     CNT_RECORD := -1;
     FORMAT := 'yyyy/mm/dd';
     FORMAT_HH := 'yyyy/mm/dd hh24';
     FORMAT_FULL := 'yyyy/mm/dd hh24:mi:ss';
+    P_VAL := 0;
 
     -- DATE
     T_DATE := IN_DATE;
@@ -44,40 +46,40 @@ BEGIN
        T_DATE := TO_CHAR(SYSDATE,FORMAT);
     END IF;
 
-    -- Â∞è?
+    -- è¨?
     T_HOUR := IN_HOUR;
     IF IN_HOUR IS  NULL THEN
       T_HOUR := TO_CHAR(SYSDATE,'hh24');
     END IF;
 
-    -- Â¢ûÂä†Â§©
+    -- ˙ùâ¡ìV
     IF IN_ADD_DAY IS NOT NULL THEN
        T_DATE := TO_CHAR(TO_DATE(T_DATE,FORMAT) + IN_ADD_DAY,FORMAT);
     END IF;
 
-    -- Ê≠£?Âè∑
+    -- ê≥?çÜ
     IF IN_PLUS_MINUS IS NULL OR IN_PLUS_MINUS = '0' THEN
        PLUS_MINUS := 1;
     ELSIF IN_PLUS_MINUS = '1' THEN
        PLUS_MINUS := -1;
     END IF;
 
-    -- Â¢ûÈáè
+    -- ˙ùó 
     INCREMENT := 10;
     IF IN_INCREMENT IS NOT NULL AND IN_INCREMENT != 0 THEN
        INCREMENT := IN_INCREMENT;
     END IF;
 
 
---1„ÄÅÂ∞èÊï∞( 0 ~ 1)
+--1ÅAè¨êî( 0 ~ 1)
 
      -- select dbms_random.value from dual ;
 
---2„ÄÅÊåáÂÆöËåÉ?ÂÜÖÁöÑÂ∞èÊï∞ ( 0 ~ 100 )
+--2ÅAéwíË‰ó?ì‡ìIè¨êî ( 0 ~ 100 )
       -- select dbms_random.value(0,100) from dual ;
 
 
---3„ÄÅÊåáÂÆöËåÉ?ÂÜÖÁöÑÊï¥Êï∞ ( 0 ~ 100 )
+--3ÅAéwíË‰ó?ì‡ìIêÆêî ( 0 ~ 100 )
 
      -- select trunc(dbms_random.value(0,100)) from dual ;
 
@@ -103,51 +105,53 @@ BEGIN
                         SELECT trunc(dbms_random.value(1,100)) INTO INCREMENT FROM dual;
                      END if;
                 --day:CNT hour:CNT/24 minute:CNT/24/60 second:CNT/24/60/60
+             -- ùáì¸ìIêîêò
+             P_VAL := PLUS_MINUS*CNT*INCREMENT;
              IF IN_TABLE IS NULL OR IN_TABLE = '1' THEN -- LSDDAYRP
-               -- Âà§Êñ≠Êï∞ÊçÆÊòØÂê¶Â∑≤?Â≠òÂú® start
+               -- îªífêîêòê•î€õﬂ?ë∂ç› start
                 SELECT COUNT(1) INTO CNT_RECORD FROM LSDDAYRP
                               WHERE SYS_ID = IN_SYS_ID
                                    AND TAG_NO = IN_TAG_NO
                                    AND P_DATE =  (TO_DATE(T_DATE,FORMAT_FULL) + (CNT - 1) /24);
-                -- Âà§Êñ≠Êï∞ÊçÆÊòØÂê¶Â∑≤?Â≠òÂú® end
+                -- îªífêîêòê•î€õﬂ?ë∂ç› end
                 IF CNT_RECORD = 0 THEN
                      INSERT INTO LSDDAYRP("SYS_ID","TAG_NO","P_DATE","P_VAL1","REC_FLG","REC_PGID","REC_DATE"
                      )VALUES(
                      IN_SYS_ID,
                      IN_TAG_NO,
                      (TO_DATE(T_DATE,FORMAT_FULL) + (CNT - 1) /24),
-                     PLUS_MINUS*CNT*INCREMENT,
+                     P_VAL,
                      '00',
                      'SONIS',
                      SYSDATE
                      );
                 ELSE
-                     UPDATE LSDDAYRP SET P_VAL1 = PLUS_MINUS*CNT*INCREMENT
+                     UPDATE LSDDAYRP SET P_VAL1 = P_VAL
                                    WHERE SYS_ID = IN_SYS_ID
                                         AND TAG_NO = IN_TAG_NO
                                         AND P_DATE =  (TO_DATE(T_DATE,FORMAT_FULL) + (CNT - 1) /24);
                 END IF;
 
              ELSIF IN_TABLE = '4' THEN -- LSDREALT
-               -- Âà§Êñ≠Êï∞ÊçÆÊòØÂê¶Â∑≤?Â≠òÂú® start
+               -- îªífêîêòê•î€õﬂ?ë∂ç› start
                 SELECT COUNT(1) INTO CNT_RECORD FROM LSDREALT
                             WHERE SYS_ID = IN_SYS_ID
                                  AND TAG_NO = IN_TAG_NO
                                  AND P_DATE =  (TO_DATE(T_DATE,FORMAT_FULL) + (CNT - 1) /24 /60);
-                -- Âà§Êñ≠Êï∞ÊçÆÊòØÂê¶Â∑≤?Â≠òÂú® end
+                -- îªífêîêòê•î€õﬂ?ë∂ç› end
                 IF CNT_RECORD = 0 THEN
                      INSERT INTO LSDREALT("SYS_ID","TAG_NO","P_DATE","P_VAL1","REC_FLG","REC_PGID","REC_DATE"
                      )VALUES(
                      IN_SYS_ID,
                      IN_TAG_NO,
                      (TO_DATE(T_DATE,FORMAT_FULL) + (CNT - 1) /24 /60),
-                     PLUS_MINUS*CNT,
+                     P_VAL,
                      '00',
                      'SONIS',
                      SYSDATE
                      );
                 ELSE
-                     UPDATE LSDREALT SET P_VAL1 = PLUS_MINUS*CNT*INCREMENT
+                     UPDATE LSDREALT SET P_VAL1 = P_VAL
                                     WHERE SYS_ID = IN_SYS_ID
                                          AND TAG_NO = IN_TAG_NO
                                          AND P_DATE =  (TO_DATE(T_DATE,FORMAT_FULL) + (CNT - 1) /24 /60);
@@ -160,12 +164,12 @@ BEGIN
              EXCEPTION
                     when others then
                     intErrorInfo := -99;
-                    dbms_output.put_line('1.‚òÖ„Ç®„É©„Éº(' || TO_CHAR(intErrorInfo) || '):„Ç∑„Çπ„ÉÜ„É†„Ç®„É©„Éº');
+                    dbms_output.put_line('1.ÅöÉGÉâÅ[(' || TO_CHAR(intErrorInfo) || '):ÉVÉXÉeÉÄÉGÉâÅ[');
                     dbms_output.put_line(SQLCODE||'---'||SQLERRM);
                     RETURN intErrorInfo;
          END;
 
-   DBMS_OUTPUT.PUT_LINE('<<<<<<<<<< Ë®àÁÆóÂá¶ÁêÜ END >>>>>>>>>>');
+   DBMS_OUTPUT.PUT_LINE('<<<<<<<<<< åvéZèàóù END >>>>>>>>>>');
   RETURN(intErrorInfo);
 END F_TEST;
 /
